@@ -53,7 +53,7 @@ NOTES ::::
 
 - You can now use the iw3 gui & cli with gpu acceleration with amd gpu's. 
 - Run iw3z.bat to start iw3 with amd gpu support.
-- CLI can also be used, but be careful to only use "--method forward_fill" , other methods freeze pc, they don't work with zluda.
+- CLI can also be used, to use it first you have enable venv , go into nunif-amd folder in commandline, "venv\scripts\activate" enter , now you can see the available parameters with "zluda\zluda.exe -- python -m iw3 -h" then use them to generate from the command prompt.
 
 - ** IMPORTANT ** All depth models work. All method's now* work.
 - * Thanks to https://github.com/nagadomi , I was able to disable everything incompatible with ZLUDA, they now work.

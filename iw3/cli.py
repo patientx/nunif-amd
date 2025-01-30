@@ -1,4 +1,8 @@
 import torch
+torch.backends.cudnn.enabled = False
+torch.backends.cuda.enable_flash_sdp(False)
+torch.backends.cuda.enable_math_sdp(True)
+torch.backends.cuda.enable_mem_efficient_sdp(False)
 from .utils import create_parser, set_state_args, iw3_main
 from . import models # noqa
 from nunif.logger import logger

@@ -1,3 +1,54 @@
+::: FOR AMD GPU'S ON WINDOWS :::
+
+## Dependencies
+
+If coming from the very start, you need :
+
+1. **Git**: Download from https://git-scm.com/download/win.
+   During installation don't forget to check the box for "Use Git from the Windows Command line and also from
+   3rd-party-software" to add Git to your system's PATH.
+2. **Python** ([3.10.11](https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe) 3.11 also works, but 3.10 is used by most popular nodes atm): Install the latest release from python.org. **Don't Use
+   Windows Store Version**. If you have that installed, uninstall and please install from python.org. During
+   installation remember to check the box for "Add Python to PATH when you are at the "Customize Python" screen.
+3. **Visual C++ Runtime**: Download [vc_redist.x64.exe](https://aka.ms/vs/17/release/vc_redist.x64.exe) and install it.
+4. Install **HIP SDK 5.7.1** from [HERE](https://www.amd.com/en/developer/resources/rocm-hub/hip-sdk.html) the correct version, "Windows 10 & 11 5.7.1 HIP SDK"
+5. Add the system variable HIP_PATH, value: `C:\\Program Files\\AMD\\ROCm\\5.7\\` (This is the default folder, if you
+   have installed it on another drive, change if necessary)
+    1. Check the variables on the lower part (System Variables), there should be a variable called: HIP_PATH.
+    2. Also check the variables on the lower part (System Variables), there should be a variable called: "Path".
+       Double-click it and click "New" add this: `C:\Program Files\AMD\ROCm\5.7\bin`
+7. If you have an AMD GPU below 6800 (6700,6600 etc.), download the recommended library files for your gpu
+   from [Brknsoul Repository](https://github.com/brknsoul/ROCmLibs)
+    1. Go to folder "C:\Program Files\AMD\ROCm\5.7\bin\rocblas", there would be a "library" folder, backup the files
+       inside to somewhere else.
+    2. Open your downloaded optimized library archive and put them inside the library folder (overwriting if
+       necessary): "C:\\Program Files\\AMD\\ROCm\\5.7\\bin\\rocblas\\library"
+8. Reboot your system.
+
+## Setup (Windows-Only)
+
+Open a cmd prompt. (Powershell doesn't work, you have to use command prompt.)
+
+```bash
+git clone https://github.com/patientx/nunif-amd
+```
+
+```bash
+cd nunif-amd
+```
+
+```bash
+install-for-amd.bat
+```
+
+to start for later use (or create a shortcut to) :
+
+```bash
+iw3z.bat
+```
+-----------------------------------------------------------------
+ORIGINAL README
+
 My playground.
 
 For the time being, I will make incompatible changes.

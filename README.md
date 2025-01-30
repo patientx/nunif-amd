@@ -40,7 +40,7 @@ cd nunif-amd
 ```
 
 ```bash
-install-for-amd.bat
+installzludaforamd.bat
 ```
 
 to start for later use (or create a shortcut to) :
@@ -48,6 +48,20 @@ to start for later use (or create a shortcut to) :
 ```bash
 iw3z.bat
 ```
+
+NOTES :::: 
+
+- You can now use the iw3 gui & cli with gpu acceleration with amd gpu's. 
+- Run iw3z.bat to start iw3 with amd gpu support.
+- CLI can also be used, but be careful to only use "--method forward_fill" , other methods freeze pc, they don't work with zluda.
+
+- ** IMPORTANT ** All depth models work. (zoed models are higher quality but slower) BUT for METHOD only "forward_fill" work.
+
+******** The first time you select a model and generate, (only a new type of model) it would seem like your computer is doing nothing, 
+******** that's normal , zluda is creating a database for future use. That only happens once for every new type of model.
+
+
+-----------------------------------------------------------------
 -----------------------------------------------------------------
 ORIGINAL README
 

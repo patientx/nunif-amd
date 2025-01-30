@@ -12,8 +12,8 @@ try:
 
     def use_flash_attention(flag):
         if flag:
-            return sdpa_kernel([SDPBackend.FLASH_ATTENTION, SDPBackend.EFFICIENT_ATTENTION, SDPBackend.MATH])
-        else:
+#            return sdpa_kernel([SDPBackend.FLASH_ATTENTION, SDPBackend.EFFICIENT_ATTENTION, SDPBackend.MATH])
+#        else:
             return sdpa_kernel([SDPBackend.MATH])
 
 except ModuleNotFoundError:

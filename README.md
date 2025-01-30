@@ -55,7 +55,8 @@ NOTES ::::
 - Run iw3z.bat to start iw3 with amd gpu support.
 - CLI can also be used, but be careful to only use "--method forward_fill" , other methods freeze pc, they don't work with zluda.
 
-- ** IMPORTANT ** All depth models work. (zoed models are higher quality but slower) BUT for METHOD only "forward_fill" work.
+- ** IMPORTANT ** All depth models work. All method's now* work.
+- * Thanks to https://github.com/nagadomi , I was able to disable everything incompatible with ZLUDA, they now work.
 
 ******** The first time you select a model and generate, (only a new type of model) it would seem like your computer is doing nothing, 
 ******** that's normal , zluda is creating a database for future use. That only happens once for every new type of model.

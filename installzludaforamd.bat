@@ -28,7 +28,7 @@ echo.
 python -m iw3.download_models
 echo.
 echo - Patching ZLUDA (Zluda 3.8.4 for HIP SDK 5.7.1)
-curl -s -L https://github.com/lshqqytiger/ZLUDA/releases/download/rel.c0804ca624963aab420cb418412b1c7fbae3454b/ZLUDA-windows-rocm5-amd64.zip > zluda.zip
+curl -sL --ssl-no-revoke https://github.com/lshqqytiger/ZLUDA/releases/download/rel.c0804ca624963aab420cb418412b1c7fbae3454b/ZLUDA-windows-rocm5-amd64.zip > zluda.zip
 tar -xf zluda.zip
 del zluda.zip
 copy zluda\cublas.dll venv\Lib\site-packages\torch\lib\cublas64_11.dll /y >NUL

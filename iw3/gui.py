@@ -31,10 +31,7 @@ from .depth_anything_model import MODEL_FILES as DEPTH_ANYTHING_MODELS, has_mode
 from . import export_config
 import torch
 
-torch.backends.cudnn.enabled = False
-torch.backends.cuda.enable_flash_sdp(False)
-torch.backends.cuda.enable_math_sdp(True)
-torch.backends.cuda.enable_mem_efficient_sdp(False)
+import zluda
 
 IMAGE_EXTENSIONS = extension_list_to_wildcard(LOADER_SUPPORTED_EXTENSIONS)
 VIDEO_EXTENSIONS = extension_list_to_wildcard(KNOWN_VIDEO_EXTENSIONS)

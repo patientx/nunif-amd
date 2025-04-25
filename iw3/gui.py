@@ -93,6 +93,40 @@ if is_zluda:
     torch.topk = safe_topk
 # ------------------- End Top-K Patch -------------------
 
+# ------------------- ONNX Runtime Patch -------------------
+try:
+    import onnxruntime as ort
+
+    if is_zluda:
+        print("\n***----------------------ZLUDA-----------------------------***")
+        print("  ::  Patching ONNX Runtime for ZLUDA — disabling CUDA EP.")
+
+        # Store original get_available_providers
+        original_get_available_providers = ort.get_available_providers
+
+        def filtered_providers():
+            return [ep for ep in original_get_available_providers() if ep != "CUDAExecutionProvider"]
+
+        # Patch ONLY the _pybind_state version (used during session creation)
+        ort.capi._pybind_state.get_available_providers = filtered_providers
+
+        # Wrap InferenceSession to force CPU provider when CUDA is explicitly requested
+        OriginalSession = ort.InferenceSession
+
+        class SafeInferenceSession(OriginalSession):
+            def __init__(self, *args, providers=None, **kwargs):
+                if providers and "CUDAExecutionProvider" in providers:
+                    print("  ::  Forcing ONNX to use CPUExecutionProvider instead of CUDA.")
+                    providers = ["CPUExecutionProvider"]
+                super().__init__(*args, providers=providers, **kwargs)
+
+        ort.InferenceSession = SafeInferenceSession
+except ImportError:
+    print("  ::  ONNX Runtime not installed — skipping patch.")
+except Exception as e:
+    print("  ::  Failed to patch ONNX Runtime:", e)
+# ------------------- End ONNX Patch -------------------
+
 # ------------------- ZLUDA Backend Patch -------------------
 if is_zluda:
     print("  ::  ZLUDA detected, disabling non-supported functions.      ")

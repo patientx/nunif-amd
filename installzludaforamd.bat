@@ -19,9 +19,10 @@ echo.
 echo - Installing necessary packages
 pip install tqdm wand >= 0.6.10 --quiet
 pip install fonttools scipy waitress bottle diskcache flake8 psutil pyyaml onnx onnxconverter_common lpips packaging dctorch timm rembg pywin32 --quiet
-pip install "av>=12.2.0,<14.0.0" --quiet
+pip install "av==14.2.0" --quiet
 pip install truststore; python_version >= '3.10' --quiet
 pip install wxpython >= 4.0.0 --quiet
+pip install safetensors pillow_heif --quiet
 echo.
 echo - Downloading models
 echo.

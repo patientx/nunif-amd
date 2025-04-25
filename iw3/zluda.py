@@ -1,21 +1,27 @@
-# hide rocm and hip
+# ------------------- Hide ROCm/HIP -------------------
 import os
-os.environ.pop("ROCM_HOME",None)
-os.environ.pop("HIP_HOME",None)
-os.environ.pop("ROCM_VERSION",None)
-paths=os.environ["PATH"].split(";")
-paths_no_rocm=[]
-for path_ in paths:
-    if "rocm" not in path_.lower():
-        paths_no_rocm.append(path_)
-os.environ["PATH"]=";".join(paths_no_rocm)
+
+os.environ.pop("ROCM_HOME", None)
+os.environ.pop("HIP_HOME", None)
+os.environ.pop("ROCM_VERSION", None)
+
+paths = os.environ["PATH"].split(";")
+paths_no_rocm = [p for p in paths if "rocm" not in p.lower()]
+os.environ["PATH"] = ";".join(paths_no_rocm)
+# ------------------- End ROCm/HIP Hiding -------------
+
+# Fix for cublasLt errors on newer ZLUDA (if no hipblaslt)
+os.environ['DISABLE_ADDMM_CUDA_LT'] = '1'
 
 import torch
-import torch._dynamo 
-	
 
-# audio patch
-if torch.cuda.is_available() and torch.cuda.get_device_name().endswith("[ZLUDA]"):
+# ------------------- ZLUDA Detection -------------------
+zluda_device_name = torch.cuda.get_device_name() if torch.cuda.is_available() else ""
+is_zluda = zluda_device_name.endswith("[ZLUDA]")
+# ------------------- End Detection --------------------
+
+# ------------------- Audio Ops Patch -------------------
+if is_zluda:
     _torch_stft = torch.stft
     _torch_istft = torch.istft
 
@@ -29,18 +35,41 @@ if torch.cuda.is_available() and torch.cuda.get_device_name().endswith("[ZLUDA]"
         f.graph = torch._C.Graph()
         return f
 
+    torch._dynamo.config.suppress_errors = True
     torch.stft = z_stft
     torch.istft = z_istft
-    torch.jit.script = z_jit 
-# audio patch end  
+    torch.jit.script = z_jit
+# ------------------- End Audio Patch -------------------
 
-# disable non-supported functions  
-    print(" ")
-    print("  ::  ZLUDA is found.")
-    torch._dynamo.config.suppress_errors = True
+# ------------------- Top-K Fallback Patch -------------------
+if is_zluda:
+    _topk = torch.topk
+
+    def safe_topk(input: torch.Tensor, *args, **kwargs):
+        device = input.device
+        values, indices = _topk(input.cpu(), *args, **kwargs)
+        return torch.return_types.topk((values.to(device), indices.to(device),))
+
+    torch.topk = safe_topk
+# ------------------- End Top-K Patch -------------------
+
+# ------------------- ZLUDA Backend Patch -------------------
+if is_zluda:
+    print("  ::  ZLUDA detected, disabling non-supported functions.      ")
     torch.backends.cudnn.enabled = False
-    torch.backends.cuda.enable_flash_sdp(False)
-    torch.backends.cuda.enable_math_sdp(True)
-    torch.backends.cuda.enable_mem_efficient_sdp(False)
-    print("  ::  Used device:", torch.cuda.get_device_name())
-    print(" ")
+
+    if hasattr(torch.backends.cuda, "enable_flash_sdp"):
+        torch.backends.cuda.enable_flash_sdp(False)
+    if hasattr(torch.backends.cuda, "enable_math_sdp"):
+        torch.backends.cuda.enable_math_sdp(True)
+    if hasattr(torch.backends.cuda, "enable_mem_efficient_sdp"):
+        torch.backends.cuda.enable_mem_efficient_sdp(False)
+    print("  ::  CuDNN, flash_sdp, mem_efficient_sdp disabled.           ")
+ 
+if is_zluda:
+    print(f"  ::  Using ZLUDA with device: {zluda_device_name}")
+    print("***--------------------------------------------------------***\n")
+else:
+    print(f"  ::  CUDA device detected: {zluda_device_name or 'None'}")
+    print("***--------------------------------------------------------***\n")
+# ------------------- End Zluda detection -------------------

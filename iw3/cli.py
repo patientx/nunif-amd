@@ -109,6 +109,31 @@ else:
     print(f"  ::  CUDA device detected: {zluda_device_name or 'None'}")
     print("***--------------------------------------------------------***\n")
 # ------------------- End Zluda detection -------------------
+# ------------------- Check/Install Required Modules -------------------
+import subprocess
+import pkg_resources
+
+def check_install(package, min_version=None):
+    try:
+        if min_version:
+            pkg_resources.require(f"{package}>={min_version}")
+        else:
+            __import__(package)
+    except (ImportError, pkg_resources.DistributionNotFound, pkg_resources.VersionConflict):
+        try:
+            subprocess.run(
+                [sys.executable, "-m", "pip", "install", f"{package}>={min_version}" if min_version else package],
+                check=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL
+            )
+        except Exception:
+            pass  # Silent fail
+
+check_install("safetensors")
+check_install("pillow_heif")
+check_install("av", "14.2.0")
+# ------------------- End Module Check -------------------
 
 from .utils import create_parser, set_state_args, iw3_main
 from . import models # noqa

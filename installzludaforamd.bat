@@ -14,15 +14,15 @@ echo - Updating the pip package
 python.exe -m pip install --upgrade pip --quiet
 echo.
 echo - Installing torch for AMD GPUs (Using torch 2.3.0 if you want you can change it but this works well with zluda)
-pip install torch==2.3.0 torchvision==0.18.0 --index-url https://download.pytorch.org/whl/cu118 --quiet
+pip install torch==2.3.0 torchvision==0.18.0 --index-url https://download.pytorch.org/whl/cu118
 echo.
 echo - Installing necessary packages
-pip install tqdm wand >= 0.6.10 --quiet
-pip install fonttools scipy waitress bottle diskcache flake8 psutil pyyaml onnx onnxconverter_common lpips packaging dctorch timm rembg pywin32 --quiet
-pip install "av==14.2.0" --quiet
-pip install truststore; python_version >= '3.10' --quiet
-pip install wxpython >= 4.0.0 --quiet
-pip install safetensors pillow_heif --quiet
+pip install tqdm wand >= 0.6.10
+pip install fonttools scipy waitress bottle diskcache flake8 psutil pyyaml onnx onnxconverter_common lpips packaging dctorch timm rembg pywin32
+pip install av==14.2.0
+pip install truststore; python_version >= '3.10'
+pip install wxpython >= 4.0.0
+pip install safetensors pillow_heif
 echo.
 echo - Downloading models
 echo.
